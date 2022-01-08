@@ -128,6 +128,25 @@ all_possivel_o(GameState, X/Y, S) :- X < S,
                                      \+ all_possivel_o_helper(GameState, X/0, S),
                                      all_possivel_o(GameState, X1/0, S).
 
+get_player_x_coords(GameState, X/Y) :- write('Selecione as coordenadas X/Y: '),
+                                       read(X/Y),
+                                       write(X/Y),
+                                       nl,
+                                       valid_player_x(GameState, X/Y).
+get_player_x_coords(GameState, X/Y) :- get_player_x_coords(GameState, X/Y).
+
+get_player_o_coords(GameState, X/Y) :- write('Selecione as coordenadas aqui X/Y: '),
+                                       read(X/Y),
+                                       write(X/Y),
+                                       nl,
+                                       valid_player_o(GameState, X/Y).
+get_player_o_coords(GameState, X/Y) :- get_player_o_coords(GameState, X/Y).
+
+
+
+
+
+
 
 
 
