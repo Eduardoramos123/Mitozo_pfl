@@ -67,25 +67,69 @@ is_there_x([X|L]) :- is_there_x(L).
 is_there_o(['O'|L]).
 is_there_o([X|L]) :- is_there_o(L).
 
+not_valid_move(GameState, X/Y) :- X < 0.
+not_valid_move(GameState, X/Y) :- length(GameState, S),
+                                  X >= S.
+not_valid_move(GameState, X/Y) :- Y < 0.
+not_valid_move(GameState, X/Y) :- length(GameState, S),
+                                  Y >= S.
+
 valid_player_o(GameState, X/Y) :- valid_helper(GameState, X/Y, L),
+                                  \+ not_valid_move(GameState, X/Y),
                                   is_there_x(L),
                                   is_there_o(L).
 valid_player_o(GameState, X/Y) :- valid_helper(GameState, X/Y, L),
+                                  \+ not_valid_move(GameState, X/Y),
                                   \+ is_there_x(L),
                                   \+ is_there_o(L).
 valid_player_o(GameState, X/Y) :- valid_helper(GameState, X/Y, L),
+                                  \+ not_valid_move(GameState, X/Y),
                                   \+ is_there_x(L),
                                   is_there_o(L).
 
 valid_player_x(GameState, X/Y) :- valid_helper(GameState, X/Y, L),
+                                  \+ not_valid_move(GameState, X/Y),
                                   is_there_x(L),
                                   is_there_o(L).
 valid_player_x(GameState, X/Y) :- valid_helper(GameState, X/Y, L),
+                                  \+ not_valid_move(GameState, X/Y),
                                   \+ is_there_x(L),
                                   \+ is_there_o(L).
 valid_player_x(GameState, X/Y) :- valid_helper(GameState, X/Y, L),
+                                  \+ not_valid_move(GameState, X/Y),
                                   is_there_x(L),
                                   \+ is_there_o(L).
+
+all_possivel_x_helper(GameState, X/Y, S) :- Y < S,
+                                            get_true_value(GameState, X/Y, 'E'),
+                                            valid_player_x(GameState, X/Y).
+all_possivel_x_helper(GameState, X/Y, S) :- Y < S,
+                                            Y1 is Y+1,
+                                            all_possivel_x_helper(GameState, X/Y1, S).
+
+all_possivel_x(GameState, X/Y, S) :- X < S,
+                                     all_possivel_x_helper(GameState, X/0, S).
+all_possivel_x(GameState, X/Y, S) :- X < S,
+                                     X1 is X+1,
+                                     \+ all_possivel_x_helper(GameState, X/0, S),
+                                     all_possivel_x(GameState, X1/0, S).  
+
+all_possivel_o_helper(GameState, X/Y, S) :- Y < S,
+                                            get_true_value(GameState, X/Y, 'E'),
+                                            valid_player_o(GameState, X/Y).
+all_possivel_o_helper(GameState, X/Y, S) :- Y < S,
+                                            Y1 is Y+1,
+                                            all_possivel_o_helper(GameState, X/Y1, S).
+
+all_possivel_o(GameState, X/Y, S) :- X < S,
+                                     all_possivel_o_helper(GameState, X/0, S).
+all_possivel_o(GameState, X/Y, S) :- X < S,
+                                     X1 is X+1,
+                                     \+ all_possivel_o_helper(GameState, X/0, S),
+                                     all_possivel_o(GameState, X1/0, S).
+
+
+
 
 
 
