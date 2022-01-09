@@ -1,3 +1,5 @@
+:- use_module(library(random)).
+
 replicate(String, 0, []).
 replicate(String, N, List) :- N1 is N-1,
                               replicate(String, N1, L2),
@@ -142,17 +144,39 @@ get_player_o_coords(GameState, X/Y) :- write('Player O: Selecione as coordenadas
                                        valid_player_o(GameState, X/Y).
 get_player_o_coords(GameState, X/Y) :- get_player_o_coords(GameState, X/Y).
 
+get_computer_x_coords(GameState, X/Y, S) :- random(0, S, X),
+                                            random(0, S, Y),
+                                            valid_player_x(GameState, X/Y).
+get_computer_x_coords(GameState, X/Y, S) :- get_computer_x_coords(GameState, X/Y, S). 
+
+get_computer_o_coords(GameState, X/Y, S) :- random(0, S, X),
+                                            random(0, S, Y),
+                                            valid_player_o(GameState, X/Y).
+get_computer_o_coords(GameState, X/Y, S) :- get_computer_o_coords(GameState, X/Y, S).
+
 player_x_turn(GameState, NewGameState) :- get_player_x_coords(GameState, X/Y),
                                           move(GameState, X/Y, NewGameState, 'X').
 
 player_o_turn(GameState, NewGameState) :- get_player_o_coords(GameState, X/Y),
                                           move(GameState, X/Y, NewGameState, 'O').
 
+computer_x_turn(GameState, S, NewGameState) :- get_computer_x_coords(GameState, X/Y, S),
+                                               move(GameState, X/Y, NewGameState, 'X').
+
+computer_o_turn(GameState, S, NewGameState) :- get_computer_o_coords(GameState, X/Y, S),
+                                               move(GameState, X/Y, NewGameState, 'O').
+
 x_turn(GameState, S, New) :- all_possivel_x(GameState, 0/0, S),
                              player_x_turn(GameState, New).
 
 o_turn(GameState, S, New) :- all_possivel_o(GameState, 0/0, S),
                              player_o_turn(GameState, New).
+
+x_turn_computer(GameState, S, New) :- all_possivel_x(GameState, 0/0, S),
+                                      computer_x_turn(GameState, S, New).
+
+o_turn_computer(GameState, S, New) :- all_possivel_o(GameState, 0/0, S),
+                                      computer_o_turn(GameState, S, New).
 
 gameloop_pp1(GameState, S) :- display_game(GameState),
                               x_turn(GameState, S, New),
@@ -164,7 +188,39 @@ gameloop_pp2(GameState, S) :- display_game(GameState),
                               gameloop_pp1(New, S).
 gameloop_pp2(GameState, S) :- write('Player 1 wins!!!').
 
+gameloop_cc1(GameState, S) :- display_game(GameState),
+                              nl,
+                              x_turn_computer(GameState, S, New),
+                              gameloop_cc2(New, S).
+gameloop_cc1(GameState, S) :- write('Computer 2 wins!!!').
 
+gameloop_cc2(GameState, S) :- display_game(GameState),
+                              nl,
+                              o_turn_computer(GameState, S, New),
+                              gameloop_cc1(New, S).
+gameloop_cc2(GameState, S) :- write('Computer 1 wins!!!').
+
+gameloop_cp1(GameState, S) :- display_game(GameState),
+                              nl,
+                              x_turn_computer(GameState, S, New),
+                              gameloop_cp2(New, S).
+gameloop_cp1(GameState, S) :- write('Player 2 wins!!!').
+
+gameloop_cp2(GameState, S) :- display_game(GameState),
+                              o_turn(GameState, S, New),
+                              gameloop_cp1(New, S).
+gameloop_cp2(GameState, S) :- write('Computer 1 wins!!!').
+
+gameloop_pc1(GameState, S) :- display_game(GameState),
+                              x_turn(GameState, S, New),
+                              gameloop_pc2(New, S).
+gameloop_pc1(GameState, S) :- write('Computer 2 wins!!!').
+
+gameloop_pc2(GameState, S) :- display_game(GameState),
+                              nl,
+                              o_turn_computer(GameState, S, New),
+                              gameloop_pc1(New, S).
+gameloop_pc2(GameState, S) :- write('Player 1 wins!!!').
 
 
 
