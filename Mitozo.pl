@@ -344,7 +344,8 @@ valid_moves_helper_o(GameState,ListOfMoves,Y,S) :-    Y < S,
 
 
 
-valid_moves_o(GameState,ListOfMoves) :- valid_moves_helper_o(GameState,ListOfMoves,0,5).
+valid_moves_o(GameState,ListOfMoves) :- length(GameState,X),
+                                        valid_moves_helper_o(GameState,ListOfMoves,0,X).
 
 
 
