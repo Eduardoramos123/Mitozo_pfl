@@ -302,9 +302,49 @@ play :- logo,
 
 
 
+
+
+valid_moves_column_x(GameState,[], S/Y,S).
+valid_moves_column_x(GameState,ListOfMoves, X/Y,S) :- \+ valid_player_x(GameState,X/Y),
+                                                  X1 is X + 1,
+                                                  valid_moves_column_x(GameState,ListOfMoves,X1/Y,S).
+valid_moves_column_x(GameState,ListOfMoves, X/Y,S) :- valid_player_x(GameState,X/Y),
+                                                  X1 is X + 1,
+                                                  valid_moves_column_x(GameState,ListOfMoves2,X1/Y,S),
+                                                  ListOfMoves = [X/Y|ListOfMoves2].
+valid_moves_helper_x(GameState,[],S,S).
+valid_moves_helper_x(GameState,ListOfMoves,Y,S) :-    Y < S,
+                                                    Y1 is Y+1,
+                                                    valid_moves_column_x(GameState,ListOfMoves3,0/Y,S),
+                                                    valid_moves_helper_x(GameState,ListOfMoves2,Y1,S),
+                                                    append(ListOfMoves3,ListOfMoves2,ListOfMoves).
+
+
+
+valid_moves_x(GameState,ListOfMoves) :- valid_moves_helper_x(GameState,ListOfMoves,0,5).
+
  
  
 
+
+valid_moves_column_o(GameState,[], S/Y,S).
+valid_moves_column_o(GameState,ListOfMoves, X/Y,S) :- \+ valid_player_o(GameState,X/Y),
+                                                    X1 is X + 1,
+                                                    valid_moves_column_o(GameState,ListOfMoves,X1/Y,S).
+valid_moves_column_o(GameState,ListOfMoves, X/Y,S) :- valid_player_o(GameState,X/Y),
+                                                  X1 is X + 1,
+                                                  valid_moves_column_o(GameState,ListOfMoves2,X1/Y,S),
+                                                  ListOfMoves = [X/Y|ListOfMoves2].
+valid_moves_helper_o(GameState,[],S,S).
+valid_moves_helper_o(GameState,ListOfMoves,Y,S) :-    Y < S,
+                                                    Y1 is Y+1,
+                                                    valid_moves_column_o(GameState,ListOfMoves3,0/Y,S),
+                                                    valid_moves_helper_o(GameState,ListOfMoves2,Y1,S),
+                                                    append(ListOfMoves3,ListOfMoves2,ListOfMoves).
+
+
+
+valid_moves_o(GameState,ListOfMoves) :- valid_moves_helper_o(GameState,ListOfMoves,0,5).
 
 
 
