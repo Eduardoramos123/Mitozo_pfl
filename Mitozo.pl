@@ -128,22 +128,41 @@ all_possivel_o(GameState, X/Y, S) :- X < S,
                                      \+ all_possivel_o_helper(GameState, X/0, S),
                                      all_possivel_o(GameState, X1/0, S).
 
-get_player_x_coords(GameState, X/Y) :- write('Selecione as coordenadas X/Y: '),
+get_player_x_coords(GameState, X/Y) :- write('Player X: Selecione as coordenadas X/Y: '),
                                        read(X/Y),
                                        write(X/Y),
                                        nl,
                                        valid_player_x(GameState, X/Y).
 get_player_x_coords(GameState, X/Y) :- get_player_x_coords(GameState, X/Y).
 
-get_player_o_coords(GameState, X/Y) :- write('Selecione as coordenadas aqui X/Y: '),
+get_player_o_coords(GameState, X/Y) :- write('Player O: Selecione as coordenadas X/Y: '),
                                        read(X/Y),
                                        write(X/Y),
                                        nl,
                                        valid_player_o(GameState, X/Y).
 get_player_o_coords(GameState, X/Y) :- get_player_o_coords(GameState, X/Y).
 
+player_x_turn(GameState, NewGameState) :- get_player_x_coords(GameState, X/Y),
+                                          move(GameState, X/Y, NewGameState, 'X').
 
+player_o_turn(GameState, NewGameState) :- get_player_o_coords(GameState, X/Y),
+                                          move(GameState, X/Y, NewGameState, 'O').
 
+x_turn(GameState, S, New) :- all_possivel_x(GameState, 0/0, S),
+                             player_x_turn(GameState, New).
+
+o_turn(GameState, S, New) :- all_possivel_o(GameState, 0/0, S),
+                             player_o_turn(GameState, New).
+
+gameloop_pp1(GameState, S) :- display_game(GameState),
+                              x_turn(GameState, S, New),
+                              gameloop_pp2(New, S).
+gameloop_pp1(GameState, S) :- write('Player 2 wins!!!').
+
+gameloop_pp2(GameState, S) :- display_game(GameState),
+                              o_turn(GameState, S, New),
+                              gameloop_pp1(New, S).
+gameloop_pp2(GameState, S) :- write('Player 1 wins!!!').
 
 
 
