@@ -130,14 +130,14 @@ all_possivel_o(GameState, X/Y, S) :- X < S,
                                      \+ all_possivel_o_helper(GameState, X/0, S),
                                      all_possivel_o(GameState, X1/0, S).
 
-get_player_x_coords(GameState, X/Y) :- write('Player X: Selecione as coordenadas X/Y: '),
+get_player_x_coords(GameState, X/Y) :- write('Player X: Select X/Y: '),
                                        read(X/Y),
                                        write(X/Y),
                                        nl,
                                        valid_player_x(GameState, X/Y).
 get_player_x_coords(GameState, X/Y) :- get_player_x_coords(GameState, X/Y).
 
-get_player_o_coords(GameState, X/Y) :- write('Player O: Selecione as coordenadas X/Y: '),
+get_player_o_coords(GameState, X/Y) :- write('Player O: Select X/Y: '),
                                        read(X/Y),
                                        write(X/Y),
                                        nl,
@@ -222,9 +222,83 @@ gameloop_pc2(GameState, S) :- display_game(GameState),
                               gameloop_pc1(New, S).
 gameloop_pc2(GameState, S) :- write('Player 1 wins!!!').
 
+logo :- write('MMMMMMMM               MMMMMMMM  iiii          tttt'),
+        nl,
+        write('M:::::::M             M:::::::M i::::i      ttt:::t'),
+        nl,
+        write('M::::::::M           M::::::::M  iiii       t:::::t'),
+        nl,
+        write('M:::::::::M         M:::::::::M             t:::::t'),
+        nl,
+        write('M::::::::::M       M::::::::::Miiiiiiittttttt:::::ttttttt       ooooooooooo   zzzzzzzzzzzzzzzzz   ooooooooooo'),
+        nl,
+        write('M:::::::::::M     M:::::::::::Mi:::::it:::::::::::::::::t     oo:::::::::::oo z:::::::::::::::z oo:::::::::::oo'),
+        nl,
+        write('M:::::::M::::M   M::::M:::::::M i::::it:::::::::::::::::t    o:::::::::::::::oz::::::::::::::z o:::::::::::::::o'),
+        nl,
+        write('M::::::M M::::M M::::M M::::::M i::::itttttt:::::::tttttt    o:::::ooooo:::::ozzzzzzzz::::::z  o:::::ooooo:::::o'),
+        nl,
+        write('M::::::M  M::::M::::M  M::::::M i::::i      t:::::t          o::::o     o::::o      z::::::z   o::::o     o::::o'),
+        nl,
+        write('M::::::M   M:::::::M   M::::::M i::::i      t:::::t          o::::o     o::::o     z::::::z    o::::o     o::::o'),
+        nl,
+        write('M::::::M    M:::::M    M::::::M i::::i      t:::::t          o::::o     o::::o    z::::::z     o::::o     o::::o'),
+        nl,
+        write('M::::::M     MMMMM     M::::::M i::::i      t:::::t    tttttto::::o     o::::o   z::::::z      o::::o     o::::o'),
+        nl,
+        write('M::::::M               M::::::Mi::::::i     t::::::tttt:::::to:::::ooooo:::::o  z::::::zzzzzzzzo:::::ooooo:::::o'),
+        nl,
+        write('M::::::M               M::::::Mi::::::i     tt::::::::::::::to:::::::::::::::o z::::::::::::::zo:::::::::::::::o'),
+        nl,
+        write('M::::::M               M::::::Mi::::::i       tt:::::::::::tt oo:::::::::::oo z:::::::::::::::z oo:::::::::::oo'),
+        nl,
+        write('MMMMMMMM               MMMMMMMMiiiiiiii         ttttttttttt     ooooooooooo   zzzzzzzzzzzzzzzzz   ooooooooooo'),
+        nl,
+        nl,
+        nl.
 
+regras :- write('Rules:'),
+          nl,
+          write('Mitozo is an turn-based abstract strategy game with an oriental flavour, designed by Pablo Soto Cid.'),
+          nl,
+          write('It was designed as a pen and paper game for two players, but can be played with a regular square board and X/O pieces.'),
+          nl,
+          write('Players take turns to fill every position on the game grid, with only one rule: if the piece to be placed is going to contact the opponent, it also must contact a previous piece from the player.'),
+          nl,
+          write('To place a piece you have to write the position with X/Y.'),
+          nl,
+          write('The goal of the game is to make impossible for the rival to place any more pieces before the board is completely filled.'),
+          nl,
+          nl.
 
+valid_size(S) :- S > 0.
 
+get_size(S) :- write('Select size of board: '),
+               read(S),
+               valid_size(S).
+get_size(S) :- get_size(S).
+
+valid_mode('PP').
+valid_mode('PC').
+valid_mode('CP').
+valid_mode('CC').
+
+get_mode(M) :- write('Select Mode (Player vs Player (PP), Computer vs Player (CP), Player vs Computer (PC), Computer vs Computer (CC)): '),
+               read(M),
+               valid_mode(M).
+get_mode(M) :- get_mode(M).
+
+run_game(GameState, S, 'PP') :- gameloop_pp1(GameState, S).
+run_game(GameState, S, 'PC') :- gameloop_pc1(GameState, S).
+run_game(GameState, S, 'CP') :- gameloop_cp1(GameState, S).
+run_game(GameState, S, 'CC') :- gameloop_cc1(GameState, S).
+
+play :- logo,
+        regras,
+        get_size(S),
+        get_mode(X),
+        initial_state(S, GameState),
+        run_game(GameState, S, X).
 
 
 
