@@ -18,10 +18,20 @@ print_line([X|L]) :- write(X),
                      write(' '),
                      print_line(L).
 
-display_game([]) :- write('').
-display_game([X|GameState]) :- print_line(X),
-                               nl,
-                               display_game(GameState).
+display_game(N, []) :- write('').
+display_game(N, [X|GameState]) :- write(N),
+                                  write('|'),
+                                  N1 is N+1,
+                                  print_line(X),
+                                  nl,
+                                  display_game(N1, GameState).
+
+print_col(X, X) :- write('').
+print_col(X, S) :- X \= S,
+                   write(X),
+                   write(' '),
+                   X1 is X+1,
+                   print_col(X1, S).
 
 move2(['E'|L], 0, String, Res) :- R = String,
                                   Res = [R|L].
@@ -178,49 +188,75 @@ x_turn_computer(GameState, S, New) :- all_possivel_x(GameState, 0/0, S),
 o_turn_computer(GameState, S, New) :- all_possivel_o(GameState, 0/0, S),
                                       computer_o_turn(GameState, S, New).
 
-gameloop_pp1(GameState, S) :- display_game(GameState),
+game_over(GameState, String) :- write(String).
+
+gameloop_pp1(GameState, S) :- write('  '),
+                              print_col(0, S),
+                              nl,
+                              display_game(0, GameState),
                               x_turn(GameState, S, New),
                               gameloop_pp2(New, S).
-gameloop_pp1(GameState, S) :- write('Player 2 wins!!!').
+gameloop_pp1(GameState, S) :- game_over(GameState, 'Player 2 wins!!!').
 
-gameloop_pp2(GameState, S) :- display_game(GameState),
+gameloop_pp2(GameState, S) :- write('  '),
+                              print_col(0, S),
+                              nl,
+                              display_game(0, GameState),
                               o_turn(GameState, S, New),
                               gameloop_pp1(New, S).
-gameloop_pp2(GameState, S) :- write('Player 1 wins!!!').
+gameloop_pp2(GameState, S) :- game-over(GameState, 'Player 1 wins!!!').
 
-gameloop_cc1(GameState, S) :- display_game(GameState),
+gameloop_cc1(GameState, S) :- write('  '),
+                              print_col(0, S),
+                              nl,
+                              display_game(0, GameState),
                               nl,
                               x_turn_computer(GameState, S, New),
                               gameloop_cc2(New, S).
-gameloop_cc1(GameState, S) :- write('Computer 2 wins!!!').
+gameloop_cc1(GameState, S) :- game_over(GameState, 'Computer 2 wins!!!').
 
-gameloop_cc2(GameState, S) :- display_game(GameState),
+gameloop_cc2(GameState, S) :- write('  '),
+                              print_col(0, S),
+                              nl,
+                              display_game(0, GameState),
                               nl,
                               o_turn_computer(GameState, S, New),
                               gameloop_cc1(New, S).
-gameloop_cc2(GameState, S) :- write('Computer 1 wins!!!').
+gameloop_cc2(GameState, S) :- game_over(GameState, 'Computer 1 wins!!!').
 
-gameloop_cp1(GameState, S) :- display_game(GameState),
+gameloop_cp1(GameState, S) :- write('  '),
+                              print_col(0, S),
+                              nl,
+                              display_game(0, GameState),
                               nl,
                               x_turn_computer(GameState, S, New),
                               gameloop_cp2(New, S).
-gameloop_cp1(GameState, S) :- write('Player 2 wins!!!').
+gameloop_cp1(GameState, S) :- game_over(GameState, 'Player 2 wins!!!').
 
-gameloop_cp2(GameState, S) :- display_game(GameState),
+gameloop_cp2(GameState, S) :- write('  '),
+                              print_col(0, S),
+                              nl,
+                              display_game(0, GameState),
                               o_turn(GameState, S, New),
                               gameloop_cp1(New, S).
-gameloop_cp2(GameState, S) :- write('Computer 1 wins!!!').
+gameloop_cp2(GameState, S) :- game_over(GameState, 'Computer 1 wins!!!').
 
-gameloop_pc1(GameState, S) :- display_game(GameState),
+gameloop_pc1(GameState, S) :- write('  '),
+                              print_col(0, S),
+                              nl,
+                              display_game(0, GameState),
                               x_turn(GameState, S, New),
                               gameloop_pc2(New, S).
-gameloop_pc1(GameState, S) :- write('Computer 2 wins!!!').
+gameloop_pc1(GameState, S) :- game_over(GameState, 'Computer 2 wins!!!').
 
-gameloop_pc2(GameState, S) :- display_game(GameState),
+gameloop_pc2(GameState, S) :- write('  '),
+                              print_col(0, S),
+                              nl,
+                              display_game(0, GameState),
                               nl,
                               o_turn_computer(GameState, S, New),
                               gameloop_pc1(New, S).
-gameloop_pc2(GameState, S) :- write('Player 1 wins!!!').
+gameloop_pc2(GameState, S) :- game_over(GameState, 'Player 1 wins!!!').
 
 logo :- write('MMMMMMMM               MMMMMMMM  iiii          tttt'),
         nl,
@@ -347,6 +383,5 @@ valid_moves_helper_o(GameState,ListOfMoves,Y,S) :-    Y < S,
 
 valid_moves_o(GameState,ListOfMoves) :- length(GameState,X),
                                         valid_moves_helper_o(GameState,ListOfMoves,0,X).
-
 
 
