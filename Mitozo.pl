@@ -385,7 +385,7 @@ play :- logo,
 
 
 
-
+%verifica que movimentos são validos ,numa dada coluna , para x
 valid_moves_column_x(GameState,[], S/Y,S).
 valid_moves_column_x(GameState,ListOfMoves, X/Y,S) :- \+ valid_player_x(GameState,X/Y),
                                                   X1 is X + 1,
@@ -394,6 +394,8 @@ valid_moves_column_x(GameState,ListOfMoves, X/Y,S) :- valid_player_x(GameState,X
                                                   X1 is X + 1,
                                                   valid_moves_column_x(GameState,ListOfMoves2,X1/Y,S),
                                                   ListOfMoves = [X/Y|ListOfMoves2].
+
+%verifica todas as colunas recursivamente
 valid_moves_helper_x(GameState,[],S,S).
 valid_moves_helper_x(GameState,ListOfMoves,Y,S) :-    Y < S,
                                                     Y1 is Y+1,
@@ -402,14 +404,14 @@ valid_moves_helper_x(GameState,ListOfMoves,Y,S) :-    Y < S,
                                                     append(ListOfMoves3,ListOfMoves2,ListOfMoves).
 
 
-
+%retorna todas as jogadas validas para x
 valid_moves_x(GameState,ListOfMoves) :- length(GameState, X),
                                         valid_moves_helper_x(GameState,ListOfMoves,0,5).
 
  
  
 
-
+%verifica que movimentos são validos ,numa dada coluna , para o
 valid_moves_column_o(GameState,[], S/Y,S).
 valid_moves_column_o(GameState,ListOfMoves, X/Y,S) :- \+ valid_player_o(GameState,X/Y),
                                                     X1 is X + 1,
@@ -418,6 +420,7 @@ valid_moves_column_o(GameState,ListOfMoves, X/Y,S) :- valid_player_o(GameState,X
                                                   X1 is X + 1,
                                                   valid_moves_column_o(GameState,ListOfMoves2,X1/Y,S),
                                                   ListOfMoves = [X/Y|ListOfMoves2].
+%verifica todas as colunas recursivamente
 valid_moves_helper_o(GameState,[],S,S).
 valid_moves_helper_o(GameState,ListOfMoves,Y,S) :-    Y < S,
                                                     Y1 is Y+1,
@@ -426,6 +429,6 @@ valid_moves_helper_o(GameState,ListOfMoves,Y,S) :-    Y < S,
                                                     append(ListOfMoves3,ListOfMoves2,ListOfMoves).
 
 
-
+%retorna todas as jogadas validas para o
 valid_moves_o(GameState,ListOfMoves) :- length(GameState,X),
                                         valid_moves_helper_o(GameState,ListOfMoves,0,X).
